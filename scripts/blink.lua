@@ -1,4 +1,4 @@
--- Blinks led on P0 / pin16
+-- Blinks led
 -- Exits after 10 blinks
 
 package.path=";lua/?.lua;lua/?/?.lua;"..package.path
