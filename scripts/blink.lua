@@ -15,4 +15,3 @@ for i=1,10 do
     digitalWrite(pin, HIGH) delay (250)
     digitalWrite(pin, LOW) delay (250)
 end
-
