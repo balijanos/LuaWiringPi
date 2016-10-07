@@ -1,4 +1,4 @@
--- Blinks led on P0 / (GPIO numbering)
+-- Blinks 4 leds (GPIO numbering)
 -- Exits after 10 blinks
 
 package.path=";lua/?.lua;lua/?/?.lua;"..package.path
