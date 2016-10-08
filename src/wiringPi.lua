@@ -30,6 +30,99 @@ INT_EDGE_FALLING = 1
 INT_EDGE_RISING = 2
 INT_EDGE_BOTH = 3
 
+PI_MODEL_A = 0
+PI_MODEL_B = 1
+PI_MODEL_AP = 2
+PI_MODEL_BP = 3
+PI_MODEL_2 = 4
+PI_ALPHA = 5
+PI_MODEL_CM = 6
+PI_MODEL_07 = 7
+PI_MODEL_3 = 8
+PI_MODEL_ZERO = 9
+
+PI_VERSION_1 = 0
+PI_VERSION_1_1 = 1
+PI_VERSION_1_2 = 2
+PI_VERSION_2 = 3
+
+PI_MAKER_SONY = 0
+PI_MAKER_EGOMAN = 1
+PI_MAKER_MBEST = 2
+PI_MAKER_UNKNOWN = 3
+
+PI_ModelNames =
+{
+  "Model A",	--  0
+  "Model B",	--  1
+  "Model A+",	--  2
+  "Model B+",	--  3
+  "Pi 2",	--  4
+  "Alpha",	--  5
+  "CM",		--  6
+  "Unknown07",	-- 07
+  "Pi 3",	-- 08
+  "Pi Zero",	-- 09
+  "Unknown10",	-- 10
+  "Unknown11",	-- 11
+  "Unknown12",	-- 12
+  "Unknown13",	-- 13
+  "Unknown14",	-- 14
+  "Unknown15",	-- 15
+}
+
+PI_RevisionNames =
+{
+  "00",
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+} 
+
+PI_MakerNames =
+{
+  "Sony",	--	 0
+  "Egoman",	--	 1
+  "Embest",	--	 2
+  "Unknown",	--	 3
+  "Embest",	--	 4
+  "Unknown05",	--	 5
+  "Unknown06",	--	 6
+  "Unknown07",	--	 7
+  "Unknown08",	--	 8
+  "Unknown09",	--	 9
+  "Unknown10",	--	10
+  "Unknown11",	--	11
+  "Unknown12",	--	12
+  "Unknown13",	--	13
+  "Unknown14",	--	14
+  "Unknown15",	--	15
+}
+
+PI_MemorySize =
+{
+   256,		--	 0
+   512,		--	 1
+  1024,		--	 2
+     0,		--	 3
+     0,		--	 4
+     0,		--	 5
+     0,		--	 6
+     0,		--	 7
+}
+
 wiringPiSetup = w.setup
 wiringPiSetupGpio = w.setupGpio
 wiringPiSetupPhys = w.setupPhys
@@ -70,5 +163,9 @@ softPwmCreate = w.pwm
 softPwmWrite = w.freq
 
 wiringPiISR = w.isr
+
+piBoardId = w.piboardid
+pinInfo = w.pininfo
+physPinToGpio = w.phystogpio
 
 return w

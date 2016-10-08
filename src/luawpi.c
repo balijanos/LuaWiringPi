@@ -1,9 +1,12 @@
 /* 
 -------------------------
+-- LuaWiringPi v1.0
 -- wiringPi Lua interface
 -------------------------
 -- Lua version 5.2
 -- Copyright (C) 2016 Hi.Project Ltd.
+--
+-- based on lua-wpi library by wizgrav (https://github.com/wizgrav/lua-wpi)
 */
 
 #include <stdio.h>
@@ -396,6 +399,122 @@ static int wpi_isr (lua_State *L) {
 	return 1;
 }
 
+// RASPBERRY TOOLS
+// piBoardId (&model, &rev, &mem, &maker, &overVolted) ;
+static int wpi_piboardid (lua_State *L) {
+	int model, rev, mem, maker, overVolted;
+	piBoardId (&model, &rev, &mem, &maker, &overVolted);
+	lua_pushinteger(L,model);
+	lua_pushinteger(L,rev);
+	lua_pushinteger(L,mem);
+	lua_pushinteger(L,maker);
+	lua_pushinteger(L,overVolted);
+	return 5;
+}
+
+static char *physNames [64] = 
+{
+  NULL,
+
+  "   3.3v", "5v     ",
+  "  SDA.1", "5V     ",
+  "  SCL.1", "0v     ",
+  "GPIO. 7", "TxD    ",
+  "     0v", "RxD    ",
+  "GPIO. 0", "GPIO. 1",
+  "GPIO. 2", "0v     ",
+  "GPIO. 3", "GPIO. 4",
+  "   3.3v", "GPIO. 5",
+  "   MOSI", "0v     ",
+  "   MISO", "GPIO. 6",
+  "   SCLK", "CE0    ",
+  "     0v", "CE1    ",
+  "  SDA.0", "SCL.0  ",
+  "GPIO.21", "0v     ",
+  "GPIO.22", "GPIO.26",
+  "GPIO.23", "0v     ",
+  "GPIO.24", "GPIO.27",
+  "GPIO.25", "GPIO.28",
+  "     0v", "GPIO.29",
+       NULL, NULL,
+       NULL, NULL,
+       NULL, NULL,
+       NULL, NULL,
+       NULL, NULL,
+  "GPIO.17", "GPIO.18",
+  "GPIO.19", "GPIO.20",
+   NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+};
+static char *alts [] = { "IN", "OUT", "ALT5", "ALT4", "ALT0", "ALT1", "ALT2", "ALT3" };
+extern int wpMode;
+static int physToWpi [64] = 
+{
+  -1,           // 0
+  -1, -1,       // 1, 2
+   8, -1,
+   9, -1,
+   7, 15,
+  -1, 16,
+   0,  1,
+   2, -1,
+   3,  4,
+  -1,  5,
+  12, -1,
+  13,  6,
+  14, 10,
+  -1, 11,       // 25, 26
+  30, 31,	// Actually I2C, but not used
+  21, -1,
+  22, 26,
+  23, -1,
+  24, 27,
+  25, 28,
+  -1, 29,
+  -1, -1,
+  -1, -1,
+  -1, -1,
+  -1, -1,
+  -1, -1,
+  17, 18,
+  19, 20,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1
+};
+// Physical pin number required!
+static int wpi_pininfo (lua_State *L) {	
+	if(lua_gettop(L) != 1) luaL_error(L,"Invalid number of arguments.");	
+	int physPin = lua_tointeger(L,1);
+	lua_settop(L,0);
+	// Pin physical number
+	lua_pushinteger(L,physPin) ;
+	// BCM | wPi 
+	if (physPinToGpio (physPin) == -1) {
+		lua_pushinteger(L,-1);
+		lua_pushinteger(L,-1);
+	} else {
+		lua_pushinteger(L,physPinToGpio (physPin));
+		lua_pushinteger(L,physToWpi [physPin]);
+	}
+    // Name
+	lua_pushstring(L,physNames [physPin]);
+	// Mode | Value
+	if (physToWpi [physPin] == -1) {
+		lua_pushnil(L);
+		lua_pushinteger(L,-1);
+	} else {
+		lua_pushstring(L,alts [getAlt (physPin)]) ;
+		lua_pushinteger(L,digitalRead (physPin)) ;
+	}	
+	return 6;
+}
+
+static int wpi_phystogpio (lua_State *L) {
+	if(lua_gettop(L) != 1) luaL_error(L,"Invalid number of arguments.");	
+	int pin = lua_tointeger(L,1);
+	lua_settop(L,0);	
+	lua_pushinteger(L,physPinToGpio(pin)) ;
+	return 6;
+}
+
 // ---------------------------------------------------------------------
 
 static const struct luaL_Reg wpilib[] = {
@@ -450,6 +569,10 @@ static const struct luaL_Reg wpilib[] = {
 // ISR
 {"isr", wpi_isr},
 
+// TOOLS
+{"piboardid", wpi_piboardid},
+{"pininfo", wpi_pininfo},
+{"phystogpio", wpi_phystogpio},
 
 {NULL, NULL}
 };
