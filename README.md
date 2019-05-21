@@ -9,7 +9,7 @@ Prerequisites
     
   lua 5.2
   
-    sudo apt-get install lua5.2
+    sudo apt-get install lua5.2 liblua5.2-dev
     
 Build
 -----
